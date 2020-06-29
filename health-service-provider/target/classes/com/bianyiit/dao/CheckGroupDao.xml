@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bianyiit.dao.CheckGroupDao">
+    <!--添加检查组的功能-->
+    <insert id="addCheckGroup" parameterType="com.bianyiit.pojo.CheckGroup">
+        <selectKey resultType="integer" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_checkgroup(CODE,NAME,helpCode,sex,remark,attention)
+            values (#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+    </insert>
+    <!--添加检查组和检查项关系的功能-->
+    <insert id="add_checkgroup_checkitem">
+        insert into t_checkgroup_checkitem
+            values (#{param1},#{param2})
+    </insert>
+    <!--查询检查项，并进行分页-->
+    <select id="fingPage" parameterType="string" resultType="com.bianyiit.pojo.CheckGroup">
+        select * from t_checkgroup
+        <if test="value!=null and value.length>0">
+            where code=#{value} or name = #{value} or helpCode = #{value}
+        </if>
+    </select>
+    <!--查询检查项的数量-->
+    <select id="selectCheckGroupCount" resultType="long" parameterType="string">
+        select count(*) from t_checkgroup
+        <if test="value!=null and value.length>0">
+            where code=#{value} or name = #{value}
+        </if>
+    </select>
+    <!--删除检查项-->
+    <delete id="deleteCheckGroup" parameterType="integer">
+        delete from t_checkgroup where id=#{value}
+    </delete>
+    <!--删除关联关系-->
+    <delete id="delCheckItemIdsByCheckGroupId" parameterType="integer">
+        delete from t_checkgroup_checkitem where checkgroup_id=#{value}
+    </delete>
+    <!--获取某个ID对应的检查项所有的属性  返回给前端页面-->
+    <select id="findCheckGroupById" parameterType="integer" resultType="com.bianyiit.pojo.CheckItem">
+        select * from t_checkgroup where id=#{value}
+    </select>
+    <!--查询某个ID在检查项和检查组关系表中的数量-->
+    <select id="fingCountById" resultType="java.lang.Integer">
+        select count(*) from t_checkgroup_checkitem where checkgroup_id = #{value}
+    </select>
+    <select id="findCheckItemIdsByCheckGroupId" resultType="java.lang.Integer">
+        select checkitem_id from t_checkgroup_checkitem where checkgroup_id = #{value}
+    </select>
+    <!--查询所有的检查组-->
+    <select id="findAll" resultType="com.bianyiit.pojo.CheckGroup">
+        select * from t_checkgroup
+    </select>
+    <resultMap id="findGroupsById1" type="com.bianyiit.pojo.CheckGroup">
+        <id column="id" property="id"></id>
+        <result property="code" column="code"></result>
+        <result property="name" column="name"></result>
+        <result property="helpCode" column="helpCode"></result>
+        <result property="sex" column="sex"></result>
+        <result property="remark" column="remark"></result>
+        <result property="attention" column="attention"></result>
+        <collection property="checkItems" column="id" select="com.bianyiit.dao.CheckItemDao.findCheckItemsById"></collection>
+    </resultMap>
+    <select id="findGroupsById" resultMap="findGroupsById1">
+        select * from t_checkgroup where id in (
+            select checkgroup_id from t_setmeal_checkgroup where setmeal_id=#{value}
+        )
+    </select>
+    <!--修改某个检查项的属性-->
+    <update id="edit" parameterType="com.bianyiit.pojo.CheckGroup">
+        update t_checkgroup
+        <set>
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="helpCode!=null">
+                helpCode=#{helpCode},
+            </if>
+            <if test="sex!=null">
+                sex=#{sex},
+            </if>
+            <if test="remark!=null">
+                remark=#{remark},
+            </if>
+
+            <if test="attention!=null">
+                attention=#{attention}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

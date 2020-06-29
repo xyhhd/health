@@ -1,0 +1,4 @@
+com\bianyiit\controller\MemberController.class
+com\bianyiit\controller\SetmealController.class
+com\bianyiit\controller\OrderController.class
+com\bianyiit\controller\ValidateCodeController.class

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bianyiit.dao.SetmealDao">
+    <!--添加Setmeal-->
+    <insert id="addSetmeal" parameterType="com.bianyiit.pojo.Setmeal">
+        <selectKey resultType="integer" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_setmeal(NAME,CODE,helpCode,sex,age,price,remark,attention,img)
+            values (#{name},#{code},#{helpCode},#{sex},#{age},#{price},#{remark},#{attention},#{img})
+        <!--insert into t_setmeal (name, code, helpCode, sex, age, price, remark, attention, img) VALUES
+        (#{name}, #{code}, #{helpCode}, #{sex}, #{age}, #{price}, #{remark}, #{attention}, #{img})
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>-->
+    </insert>
+    <!--添加checkgroup和setmeal的关联关系-->
+    <insert id="add_t_setmeal_checkgroup" parameterType="integer">
+        insert into t_setmeal_checkgroup
+        values (#{param1},#{param2})
+    </insert>
+    <!--修改setmeal-->
+    <update id="edit" parameterType="com.bianyiit.pojo.Setmeal">
+        update t_setmeal
+        <set>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="helpCode!=null">
+                helpCode=#{helpCode},
+            </if>
+            <if test="sex!=null">
+                sex=#{sex},
+            </if>
+            <if test="age!=null">
+                age=#{age},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="remark!=null">
+                remark=#{remark},
+            </if>
+            <if test="attention!=null">
+                attention=#{attention},
+            </if>
+            <if test="img!=null">
+                img=#{img}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+    <!--删除级联关系-->
+    <delete id="delCheckGroupIdBySetmeal" parameterType="integer">
+        delete from t_setmeal_checkgroup where setmeal_id=#{value}
+    </delete>
+    <delete id="delete" parameterType="integer">
+        delete from t_setmeal where id=#{value}
+    </delete>
+
+
+    <select id="findPage" resultType="com.bianyiit.pojo.Setmeal" parameterType="string">
+        select * from t_setmeal
+        <if test="value!=null and value.length>0">
+            where code=#{value} or helpCode=#{value} or name=#{name}
+        </if>
+    </select>
+    <select id="countSemeal" resultType="java.lang.Long" parameterType="string">
+        select count(*) from t_setmeal
+        <if test="value!=null and value.length>0">
+            where code=#{value} or helpCode=#{value} or name=#{name}
+        </if>
+    </select>
+    <!--查询某个id的套餐-->
+    <select id="findById" resultType="com.bianyiit.pojo.Setmeal">
+        select * from t_setmeal where id=#{value}
+    </select>
+    <!--查询关联关系-->
+    <select id="findCheckGroupIdBySetmeal" resultType="integer">
+        select checkgroup_id from t_setmeal_checkgroup where setmeal_id=#{value}
+    </select>
+    <select id="findAll" resultType="com.bianyiit.pojo.Setmeal">
+        select * from t_setmeal
+    </select>
+    <resultMap id="findSetmealById1" type="com.bianyiit.pojo.Setmeal">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="code" property="code"></result>
+        <result column="helpCode" property="helpCode"></result>
+        <result column="sex" property="sex"></result>
+        <result column="age" property="age"></result>
+        <result column="price" property="price"></result>
+        <result column="remark" property="remark"></result>
+        <result column="attention" property="attention"></result>
+        <result column="img" property="img"></result>
+        <collection property="checkGroups" column="id" select="com.bianyiit.dao.CheckGroupDao.findGroupsById">
+
+        </collection>
+    </resultMap>
+    <select id="findSetmealById" resultMap="findSetmealById1">
+        select * from t_setmeal where id=#{value}
+    </select>
+    <select id="findSetmealCount" resultType="java.util.Map">
+        SELECT s.name,COUNT(o.id) AS value FROM t_order o,t_setmeal s
+        WHERE o.setmeal_id=s.id GROUP BY s.name;
+    </select>
+</mapper>

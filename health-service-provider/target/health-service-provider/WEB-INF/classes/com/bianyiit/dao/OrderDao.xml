@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bianyiit.dao.OrderDao">
+    <insert id="addOrder">
+        <selectKey resultType="integer" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_order(member_id,orderDate,orderType,orderStatus,setmeal_id)
+            values (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+    </insert>
+
+    <resultMap id="orderMap" type="com.bianyiit.pojo.Order">
+        <id column="id" property="id"></id>
+        <result column="member_id" property="memberId"></result>
+        <result column="orderDate" property="orderDate"></result>
+        <result column="orderType" property="orderType"></result>
+        <result column="orderStatus" property="orderStatus"></result>
+        <result column="setmeal_id" property="setmealId"></result>
+    </resultMap>
+    <select id="findByCondition" resultMap="orderMap" parameterType="com.bianyiit.pojo.Order">
+        select * from t_order
+         <where>
+             <if test="memberId!=null">
+                and member_id=#{memberId}
+             </if>
+             <if test="orderDate!=null">
+                 and orderDate=#{orderDate}
+             </if>
+             <if test="setmealId!=null">
+                 and setmeal_id=#{setmealId}
+             </if>
+         </where>
+    </select>
+    <resultMap id="map" type="map">
+
+    </resultMap>
+    <select id="findById" resultMap="map" parameterType="integer">
+        select
+            m.name member,
+            s.name setmeal,
+            o.orderDate orderDate,
+            o.orderType orderType
+        from t_order o,t_member m,t_setmeal s where
+            o.id=#{value} and o.member_id = m.id and o.setmeal_id = s.id
+    </select>
+    <select id="getOrdderThisDay" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from t_order where orderDate = #{value}
+    </select>
+    <select id="getOrdderThisWeek" resultType="java.lang.Integer"  parameterType="string">
+        select count(*) from t_order where orderDate &gt;= #{value}
+    </select>
+    <select id="getVisitsThisDay" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from t_order where orderDate = #{value} and orderStatus='已到诊'
+    </select>
+    <select id="getVisitsThisWeek" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from t_order where orderDate &gt;= #{value} and orderStatus='已到诊'
+    </select>
+    <select id="findHotSetMeal" resultType="java.util.Map">
+        select s.name,
+        count(o.id) setmeal_count,
+        count(o.id)/(select count(id) from t_order) proportion
+        from t_order o,t_setmeal s where o.setmeal_id = s.id
+        group by o.setmeal_id
+        order by setmeal_count desc
+        limit 0,3
+    </select>
+</mapper>

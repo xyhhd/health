@@ -1,0 +1,17 @@
+com\bianyiit\dao\OrderDao.class
+com\bianyiit\service\CheckItemServiceImpl.class
+com\bianyiit\service\ReportServiceImpl.class
+com\bianyiit\service\UserServiceImpl.class
+com\bianyiit\service\SetmealServiceImpl.class
+com\bianyiit\service\OrderSettingServiceImpl.class
+com\bianyiit\dao\PermissionDao.class
+com\bianyiit\dao\UserDao.class
+com\bianyiit\dao\OrderSettingDao.class
+com\bianyiit\service\OrderServiceImpl.class
+com\bianyiit\dao\RoleDao.class
+com\bianyiit\dao\SetmealDao.class
+com\bianyiit\dao\CheckItemDao.class
+com\bianyiit\dao\CheckGroupDao.class
+com\bianyiit\service\CheckGroupServiceImpl.class
+com\bianyiit\dao\MemberDao.class
+com\bianyiit\service\MemberServiceImpl.class

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bianyiit.dao.OrderSettingDao">
+
+    <insert id="addOrderSetting" parameterType="list">
+        insert into t_ordersetting(orderDate,number ) values
+        <foreach collection="list" index="index" item="orderSetting" separator=",">
+            (#{orderSetting.orderDate},#{orderSetting.number})
+        </foreach>
+    </insert>
+    <!--修改number-->
+    <update id="updateOrderSetting" parameterType="com.bianyiit.pojo.OrderSetting">
+        update t_ordersetting
+        <set>
+            <if test="number!=null" >
+                number = #{number},
+            </if>
+            <if test="reservations!=null">
+                reservations=#{reservations}
+            </if>
+        </set>
+        where orderDate = #{orderDate}
+    </update>
+    <select id="findCountByOrderDate" resultType="java.lang.Integer" parameterType="date">
+        select count(*) from t_ordersetting where orderDate = #{value}
+    </select>
+    <select id="getOrderSettingByMonth" resultType="com.bianyiit.pojo.OrderSetting" parameterType="string">
+        select * from t_ordersetting where orderDate between #{param1} and #{param2}
+    </select>
+    <select id="findOrderSettingByOrderDate" parameterType="date" resultType="com.bianyiit.pojo.OrderSetting">
+        select * from t_ordersetting where orderDate=#{value}
+    </select>
+    <insert id="insertOrderSetting" parameterType="com.bianyiit.pojo.OrderSetting">
+        insert into t_ordersetting(orderDate,number,reservations ) values(#{orderDate},#{number},0)
+    </insert>
+</mapper>

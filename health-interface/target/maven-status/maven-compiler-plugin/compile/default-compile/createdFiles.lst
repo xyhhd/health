@@ -1,0 +1,8 @@
+com\bianyiit\service\OrderService.class
+com\bianyiit\service\CheckGroupService.class
+com\bianyiit\service\SetmealService.class
+com\bianyiit\service\MemberService.class
+com\bianyiit\service\ReportService.class
+com\bianyiit\service\UserService.class
+com\bianyiit\service\CheckItemService.class
+com\bianyiit\service\OrderSettingService.class
