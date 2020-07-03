@@ -11,8 +11,8 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 
 public class QiniuUtils {
-    public  static String accessKey = "LlyhkkETvlJ3OGXRVhaPUmgcA5ZvT5xWJIFEcVpj";
-    public  static String secretKey = "2SYbzC19AhDr3cWUzMCgSIruOTxJwOhVXWKm8iZs";
+    public  static String accessKey = "七牛云秘钥";
+    public  static String secretKey = "七了、牛群秘钥";
     public  static String bucket = "xyhhd";
 
     public static void upload2Qiniu(String filePath,String fileName){

@@ -27,8 +27,7 @@ public class ValidateCodeController {
         }*/
         System.out.println("发送到手机验证码是:" + code);
         //将生成的验证码缓存到redis,并指定过期时间
-        //jedisPool.getResource().setex(telephone+ RedisMessageConstant.SENDTYPE_ORDER,5*60,code.toString());
-        jedisPool.getResource().setex("13397387223001",5*60,"1234");
+        jedisPool.getResource().setex(telephone+ RedisMessageConstant.SENDTYPE_ORDER,5*60,code.toString());
         return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
     }
     @RequestMapping("/sendLogin")
@@ -43,8 +42,7 @@ public class ValidateCodeController {
         }*/
         System.out.println("发送到手机验证码是:" + code);
         //将生成的验证码缓存到redis,并指定过期时间
-        /*jedisPool.getResource().setex(telephone+ RedisMessageConstant.SENDTYPE_LOGIN,5*60,code.toString());*/
-        jedisPool.getResource().setex("13397387223002",5*60,"1234");
+        jedisPool.getResource().setex(telephone+ RedisMessageConstant.SENDTYPE_LOGIN,5*60,code.toString());
         return new Result(true,MessageConstant.SEND_VALIDATECODE_SUCCESS);
     }
 }
